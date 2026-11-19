@@ -1,0 +1,6 @@
+target/
+*.class
+.env
+.venv/
+__pycache__/
+python/outputs/*.png

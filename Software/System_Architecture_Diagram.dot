@@ -1,0 +1,33 @@
+digraph Architecture {
+ graph [rankdir=TB, bgcolor="#F7F9FC", pad="0.35", nodesep="0.55", ranksep="0.72", splines=ortho,
+        labelloc=t, label="VCET COLLEGE CANTEEN\nOVERALL SYSTEM ARCHITECTURE", fontname="DejaVu Sans", fontsize=24, fontcolor="#17324D"];
+ node [shape=box, style="rounded,filled", color="#315D82", penwidth=1.8, fontname="DejaVu Sans", fontsize=13, margin="0.18,0.12", fillcolor="#FFFFFF"];
+ edge [color="#4C657F", penwidth=1.8, arrowsize=0.8, fontname="DejaVu Sans", fontsize=11, fontcolor="#40556C"];
+ staff [label="CANTEEN STAFF\nConsole input / menu choices", fillcolor="#EAF2FA"];
+ subgraph cluster_java {
+   label="JAVA APPLICATION (Java 17 + Maven)"; color="#8BA7C1"; style="rounded"; penwidth=1.8; fontsize=16; fontname="DejaVu Sans Bold"; fontcolor="#244C70";
+   main [label="Presentation / Control\nMain.java\nMenu, input validation, receipt display", fillcolor="#E9F3FF"];
+   food [label="Food Management\nFoodDAO + FoodItem\nAdd / view / update / delete", fillcolor="#F7FBFF"];
+   order [label="Order & Billing\nOrderDAO + OrderResult\nStock validation, bill total, previous bill", fillcolor="#F7FBFF"];
+   sales [label="Java Sales Report\nSalesReportDAO\nOrder count, revenue, item-wise and daily report", fillcolor="#F7FBFF"];
+   jdbc [label="Database Connectivity\nDatabaseConnection.java\nJDBC + PostgreSQL Driver", fillcolor="#EAF2FA"];
+   main -> food [label="calls"];
+   main -> order [label="calls"];
+   main -> sales [label="calls"];
+   food -> jdbc [label="JDBC"];
+   order -> jdbc [label="JDBC transaction"];
+   sales -> jdbc [label="JDBC"];
+ }
+ db [shape=cylinder, label="POSTGRESQL DATABASE\n\nfood_items\norders\norder_items\ninventory_transactions", fillcolor="#EEF7F1", color="#47805F", width=3.2, height=1.65];
+ subgraph cluster_python {
+   label="PYTHON SALES ANALYTICS (separate run)"; color="#B79BCB"; style="rounded"; penwidth=1.8; fontsize=16; fontname="DejaVu Sans Bold"; fontcolor="#674A80";
+   pyconn [label="Database retrieval\npsycopg2", fillcolor="#F6F0FA", color="#80609B"];
+   preprocess [label="Data preprocessing\nPandas: clean, convert, standardize categories", fillcolor="#F6F0FA", color="#80609B"];
+   analyse [label="Sales analysis\nRevenue, AOV, top items, category and peak day", fillcolor="#F6F0FA", color="#80609B"];
+   outputs [label="Outputs\nMatplotlib charts + CSV reports\nDaily / monthly / item / category / popular items", fillcolor="#F6F0FA", color="#80609B"];
+   pyconn -> preprocess -> analyse -> outputs;
+ }
+ staff -> main [label="menu input", lhead=cluster_java];
+ jdbc -> db [label="SQL read / write"];
+ db -> pyconn [label="completed sales data", ltail=cluster_java, lhead=cluster_python, color="#80609B"];
+}
