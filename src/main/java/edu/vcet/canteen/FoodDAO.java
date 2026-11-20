@@ -69,7 +69,7 @@ public class FoodDAO {
         return foodList;
     }
 
-    // 3. Update food item
+    // 3. Update food item details
     public int updateFood(int id, String name,
                           String category, BigDecimal price,
                           int stock) throws SQLException {
@@ -101,6 +101,23 @@ public class FoodDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, id);
+
+            return ps.executeUpdate();
+        }
+    }
+
+    // 5. Update only food stock
+    public int updateStock(int id, int newStock) throws SQLException {
+
+        String sql = "UPDATE food_items " +
+                     "SET stock_quantity = ? " +
+                     "WHERE food_id = ?";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, newStock);
+            ps.setInt(2, id);
 
             return ps.executeUpdate();
         }

@@ -30,6 +30,7 @@ public class Main {
             System.out.println("5. Place Order");
             System.out.println("6. Sales Report");
             System.out.println("7. View Previous Bill");
+            System.out.println("8. Update Food Stock");
             System.out.println("0. Exit");
             System.out.println("================================");
 
@@ -65,6 +66,10 @@ public class Main {
 
                     case 7:
                         viewPreviousBill(orderDAO);
+                        break;
+
+                    case 8:
+                        updateStock(foodDAO);
                         break;
 
                     case 0:
@@ -134,7 +139,7 @@ public class Main {
         }
     }
 
-    // 3. Update Food
+    // 3. Update Food Details
     private static void updateFood(FoodDAO dao) throws SQLException {
 
         System.out.println("\n--- UPDATE FOOD ITEM ---");
@@ -274,6 +279,48 @@ public class Main {
         }
 
         printReceipt(result);
+    }
+
+    // 8. Update Only Food Stock
+    private static void updateStock(FoodDAO dao) throws SQLException {
+
+        System.out.println("\n--- UPDATE FOOD STOCK ---");
+
+        // Display existing food items
+        viewFood(dao);
+
+        int id = readPositiveInt("\nEnter Food ID: ");
+
+        // Find the selected food
+        FoodItem selectedFood = null;
+
+        for (FoodItem food : dao.getAllFood()) {
+            if (food.getFoodId() == id) {
+                selectedFood = food;
+                break;
+            }
+        }
+
+        if (selectedFood == null) {
+            System.out.println("Food ID not found.");
+            return;
+        }
+
+        System.out.println("Food Name    : " + selectedFood.getFoodName());
+        System.out.println("Current Stock: " + selectedFood.getStockQuantity());
+
+        int newStock = readNonNegativeInt("Enter New Stock: ");
+
+        int rows = dao.updateStock(id, newStock);
+
+        if (rows > 0) {
+            System.out.println("\nStock updated successfully!");
+            System.out.println("Food Name : " + selectedFood.getFoodName());
+            System.out.println("Old Stock : " + selectedFood.getStockQuantity());
+            System.out.println("New Stock : " + newStock);
+        } else {
+            System.out.println("Stock update failed.");
+        }
     }
 
     // Read Text

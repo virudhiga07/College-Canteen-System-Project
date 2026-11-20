@@ -15,22 +15,28 @@
     </properties>
 
     <dependencies>
+
         <!-- PostgreSQL JDBC Driver -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.7</version>
         </dependency>
+
     </dependencies>
 
     <build>
+
         <plugins>
+
+            <!-- Java Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.0</version>
             </plugin>
 
+            <!-- Run Java Main Class -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -39,7 +45,9 @@
                     <mainClass>edu.vcet.canteen.Main</mainClass>
                 </configuration>
             </plugin>
+
         </plugins>
+
     </build>
 
 </project>
